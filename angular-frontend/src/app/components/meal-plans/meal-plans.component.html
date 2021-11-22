@@ -1,1 +1,6 @@
-<p>meal-plans works!</p>
+<button (click)="onAddNew()">Create New</button>
+<mat-tab-group>
+    <mat-tab *ngFor="let mealPlan of mealPlans" [label]="mealPlan.name">
+        <app-meal-plan-tab [data]="mealPlan"></app-meal-plan-tab>
+    </mat-tab>
+</mat-tab-group>

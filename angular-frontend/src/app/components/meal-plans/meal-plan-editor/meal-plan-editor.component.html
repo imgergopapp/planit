@@ -1,0 +1,24 @@
+<div *ngIf="mealPlanFormGroup" [formGroup]="mealPlanFormGroup">
+    <h2>Meal Plan Editor</h2>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Id</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="id" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>name</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>description</mat-label>
+        <input
+            matInput
+            placeholder="Placeholder"
+            formControlName="description"
+        />
+    </mat-form-field>
+
+    <button mat-button (click)="onSave()" mat-dialog-close>Save</button>
+</div>

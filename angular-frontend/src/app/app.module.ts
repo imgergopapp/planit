@@ -12,6 +12,9 @@ import { FooterComponent } from './common/footer/footer.component';
 import { NutrientsComponent } from './components/nutrients/nutrients.component';
 import { MealPlansComponent } from './components/meal-plans/meal-plans.component';
 import { NutrientEditorComponent } from './components/nutrients/nutrient-editor/nutrient-editor.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MealPlanEditorComponent } from './components/meal-plans/meal-plan-editor/meal-plan-editor.component';
+import { MealPlanTabComponent } from './components/meal-plans/meal-plan-tab/meal-plan-tab.component';
 
 @NgModule({
   declarations: [
@@ -22,13 +25,17 @@ import { NutrientEditorComponent } from './components/nutrients/nutrient-editor/
     NutrientsComponent,
     MealPlansComponent,
     NutrientEditorComponent,
+    MealPlanEditorComponent,
+    MealPlanTabComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
+    ReactiveFormsModule,
     BrowserAnimationsModule,
     MaterialModule,
+    FormsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

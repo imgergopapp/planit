@@ -1,0 +1,93 @@
+<div *ngIf="nutrientFormGroup" [formGroup]="nutrientFormGroup">
+    <h2>Nutriend Editor</h2>
+
+    <mat-form-field appearance="standard">
+        <mat-label>Id</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="id" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>name</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="name" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>type</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="type" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>amount</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="amount" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>kcal</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="kcal" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>protein</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="protein" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>carbohydrate</mat-label>
+        <input
+            matInput
+            placeholder="Placeholder"
+            formControlName="carbohydrate"
+        />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>saturatedFat</mat-label>
+        <input
+            matInput
+            placeholder="Placeholder"
+            formControlName="saturatedFat"
+        />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>unsaturatedFat</mat-label>
+        <input
+            matInput
+            placeholder="Placeholder"
+            formControlName="unsaturatedFat"
+        />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>sugar</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="sugar" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>salt</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="salt" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>fiber</mat-label>
+        <input matInput placeholder="Placeholder" formControlName="fiber" />
+    </mat-form-field>
+
+    <mat-form-field appearance="standard">
+        <mat-label>packageSize</mat-label>
+        <input
+            matInput
+            placeholder="Placeholder"
+            formControlName="packageSize"
+        />
+    </mat-form-field>
+    <mat-form-field appearance="standard">
+        <mat-label>packagePrice</mat-label>
+        <input
+            matInput
+            placeholder="Placeholder"
+            formControlName="packagePrice"
+        />
+    </mat-form-field>
+    <button mat-button (click)="onSave()" mat-dialog-close>Save</button>
+</div>

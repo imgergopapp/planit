@@ -1,0 +1,191 @@
+<p>meal-plan-tab works!</p>
+
+<mat-form-field appearance="fill" *ngIf="nutrients">
+    <mat-label>Select</mat-label>
+    <mat-select [(value)]="selected">
+        <mat-option *ngFor="let nutrient of nutrients" [value]="nutrient">
+            {{ nutrient.name }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
+<button mat-button (click)="onSubmit()">Add new</button>
+
+<table
+    mat-table
+    *ngIf="dataSource"
+    [dataSource]="dataSource"
+    class="mat-elevation-z8"
+>
+    <!--- Note that these columns can be defined in any order.
+  The actual rendered columns are set as a property on the row definition" -->
+    <ng-container matColumnDef="amount">
+        <th mat-header-cell *matHeaderCellDef>amount</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            <input type="text" [(ngModel)]="mealPlanNutrientDto.amount" />
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>id</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{ mealPlanNutrientDto.nutrient.id }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef>name</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{ mealPlanNutrientDto.nutrient.name }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef>type</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{ mealPlanNutrientDto.nutrient.type }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="kcal">
+        <th mat-header-cell *matHeaderCellDef>kcal</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.kcal,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="protein">
+        <th mat-header-cell *matHeaderCellDef>protein</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.protein,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="carbohydrate">
+        <th mat-header-cell *matHeaderCellDef>carbohydrate</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.carbohydrate,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="saturatedFat">
+        <th mat-header-cell *matHeaderCellDef>saturatedFat</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.saturatedFat,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="unsaturatedFat">
+        <th mat-header-cell *matHeaderCellDef>unsaturatedFat</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.unsaturatedFat,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="sugar">
+        <th mat-header-cell *matHeaderCellDef>sugar</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.sugar,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="salt">
+        <th mat-header-cell *matHeaderCellDef>salt</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.salt,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="fiber">
+        <th mat-header-cell *matHeaderCellDef>fiber</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.fiber,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="packageSize">
+        <th mat-header-cell *matHeaderCellDef>packageSize</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.packageSize,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="packagePrice">
+        <th mat-header-cell *matHeaderCellDef>packagePrice</th>
+        <td mat-cell *matCellDef="let mealPlanNutrientDto">
+            {{
+                updateAmount(
+                    mealPlanNutrientDto.nutrient.packagePrice,
+                    mealPlanNutrientDto
+                )
+            }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+        mat-row
+        *matRowDef="let row; columns: displayedColumns"
+        (click)="onRowSelection(row)"
+        [ngClass]="{ highlight: row == selectedRow }"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+</table>
