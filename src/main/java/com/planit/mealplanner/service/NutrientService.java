@@ -53,11 +53,13 @@ public class NutrientService
         return  modelMapper.map(nutrientDto, Nutrient.class);
     }
 
+    
     public NutrientDto entityToDto(Nutrient nutrient)
     {
         return modelMapper.map(nutrient, NutrientDto.class);
     }
 
+    
     public List<NutrientDto> entitiesToDtos(Collection<Nutrient> nutrients)
     {
         return nutrients.stream()

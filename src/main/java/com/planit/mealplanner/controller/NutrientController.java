@@ -13,8 +13,14 @@ import java.util.List;
 @CrossOrigin
 public class NutrientController
 {
-    @Autowired
-    private NutrientService nutrientService;
+	private final NutrientService nutrientService;
+
+	
+	@Autowired
+    public NutrientController(NutrientService nutrientService)
+    {
+		this.nutrientService = nutrientService;
+	}
 
 
     @GetMapping(produces = "application/json")

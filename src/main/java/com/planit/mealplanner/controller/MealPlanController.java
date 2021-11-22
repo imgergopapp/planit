@@ -13,11 +13,17 @@ import java.util.List;
 @CrossOrigin
 public class MealPlanController
 {
+    private final MealPlanService mealPlanService;
+
+    
     @Autowired
-    private MealPlanService mealPlanService;
+    public MealPlanController(MealPlanService mealPlanService)
+    {
+		this.mealPlanService = mealPlanService;
+	}
 
 
-    @GetMapping(produces = "application/json")
+	@GetMapping(produces = "application/json")
     public List<MealPlanDto> findAll()
     {
         return mealPlanService.findAll();
@@ -27,16 +33,14 @@ public class MealPlanController
     @PutMapping(produces = "application/json")
     public MealPlan update(@RequestBody MealPlanDto mealPlanDto)
     {
-        final MealPlan mealPlan = mealPlanService.dtoToEntity(mealPlanDto);
-        return mealPlanService.save(mealPlan);
+        return mealPlanService.save(mealPlanDto);
     }
 
 
     @PostMapping(produces = "application/json")
     public MealPlan save(@RequestBody MealPlanDto mealPlanDto)
     {
-        final MealPlan mealPlan = mealPlanService.dtoToEntity(mealPlanDto);
-        return mealPlanService.save(mealPlan);
+        return mealPlanService.save(mealPlanDto);
     }
 
 

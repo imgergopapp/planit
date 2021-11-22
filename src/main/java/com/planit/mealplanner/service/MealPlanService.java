@@ -31,6 +31,7 @@ public class MealPlanService
 
     private final ModelMapper modelMapper;
 
+    
     @Autowired
     public MealPlanService(
     		final MealPlanRepository mealPlanRepository,
@@ -44,6 +45,7 @@ public class MealPlanService
 		this.modelMapper = new ModelMapper();
 	}
     
+    
     public List<MealPlanDto> findAll()
     {
         return mealPlanRepository.findAll()
@@ -52,6 +54,7 @@ public class MealPlanService
                 .collect(Collectors.toList());
     }
 
+    
     private MealPlanDto createMealPlanDto(final MealPlan mealPlan)
 	{
 	    final ImmutableList<MealPlanNutrientDto> mealPlanNutrientDtos = mealPlanNutrientRepository.findAllByMealPlanId(mealPlan.getId())
@@ -70,9 +73,11 @@ public class MealPlanService
 	            .build();
 	}
 
-	public MealPlanDto findById(int id)
+    
+	public MealPlanDto findById(Integer id)
     {
-        final MealPlan mealPlan = mealPlanRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        final MealPlan mealPlan = mealPlanRepository.findById(id)
+        		.orElseThrow(NoSuchElementException::new);
 
         return createMealPlanDto(mealPlan);
     }
@@ -84,9 +89,9 @@ public class MealPlanService
     }
 
 
-    public MealPlan save(MealPlan savable)
+    public MealPlan save(MealPlanDto mealPlanDto)
     {
-        return mealPlanRepository.save(savable);
+        return mealPlanRepository.save(dtoToEntity(mealPlanDto));
     }
 
 

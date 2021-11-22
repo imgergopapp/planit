@@ -27,6 +27,6 @@ public class MealPlan
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "mealPlan")
+    @OneToMany(mappedBy = "mealPlan", cascade = {CascadeType.ALL})
     private Set<MealPlanNutrient> mealPlanNutrient = new HashSet<>();
 }
