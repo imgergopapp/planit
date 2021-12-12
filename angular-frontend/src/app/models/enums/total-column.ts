@@ -1,0 +1,16 @@
+export enum TotalColumn {
+    Id,
+    Name,
+    Type,
+    Amount,
+    Kcal,
+    Protein,
+    Carbohydrate,
+    SaturatedFat,
+    UnsaturatedFat,
+    Sugar,
+    Salt,
+    Fiber,
+    PackageSize,
+    PackagePrice,
+}

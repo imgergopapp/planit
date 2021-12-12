@@ -15,6 +15,7 @@ import { NutrientEditorComponent } from './components/nutrients/nutrient-editor/
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MealPlanEditorComponent } from './components/meal-plans/meal-plan-editor/meal-plan-editor.component';
 import { MealPlanTabComponent } from './components/meal-plans/meal-plan-tab/meal-plan-tab.component';
+import { WeightStatsComponent } from './components/weight-stats/weight-stats.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { MealPlanTabComponent } from './components/meal-plans/meal-plan-tab/meal
     NutrientEditorComponent,
     MealPlanEditorComponent,
     MealPlanTabComponent,
+    WeightStatsComponent,
   ],
   imports: [
     BrowserModule,

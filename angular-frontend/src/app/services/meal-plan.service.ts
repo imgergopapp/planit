@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { MealPlanDto } from '../models/dto/meal-plan-dto';
+import { MealPlan } from '../models/meal-plan';
 
 @Injectable({
   providedIn: 'root',
@@ -18,23 +19,26 @@ export class MealPlanService {
     );
   }
 
-  addNew(newMealPlanDto: MealPlanDto): Observable<MealPlanDto> {
+  addNew(newMealPlan: MealPlan): Observable<MealPlanDto> {
     return this.httpService.post<MealPlanDto>(
       `${this.backendUrl}/meal-planner/meal-plans`,
-      newMealPlanDto
+      newMealPlan
     );
   }
 
-  edit(editedMealPlanDto: MealPlanDto): Observable<MealPlanDto> {
+  edit(editedMealPlan: MealPlan): Observable<MealPlanDto> {
+    console.warn('to update');
+    console.warn(editedMealPlan);
+
     return this.httpService.put<MealPlanDto>(
       `${this.backendUrl}/meal-planner/meal-plans`,
-      editedMealPlanDto
+      editedMealPlan
     );
   }
 
-  delete(deletableMealPlanDto: MealPlanDto) {
+  delete(deletableMealPlanDto: MealPlan) {
     return this.httpService.delete(
-      `${this.backendUrl}/meal-planner/meal-plans/${deletableMealPlanDto.id}`
+      `${this.backendUrl}/meal-planner/meal-plans/${deletableMealPlanDto.getId()}`
     );
   }
 }

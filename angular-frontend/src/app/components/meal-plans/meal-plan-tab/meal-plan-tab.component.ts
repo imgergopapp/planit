@@ -1,10 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { MealPlanDto } from 'src/app/models/dto/meal-plan-dto';
 import { MealPlanNutrientDto } from 'src/app/models/dto/meal-plan-nutrient-dto';
 import { NutrientDto } from 'src/app/models/dto/nutrient-dto';
+import { TotalColumn } from 'src/app/models/enums/total-column';
+import { MealPlan } from 'src/app/models/meal-plan';
+import { MealPlanNutrient } from 'src/app/models/meal-plan-nutrient';
+import { Nutrient } from 'src/app/models/nutrient';
+import { MealPlanService } from 'src/app/services/meal-plan.service';
 import { NutrientService } from 'src/app/services/nutrient.service';
+import { TotalCalculatorService } from 'src/app/services/total-calculator.service';
 
 @Component({
   selector: 'app-meal-plan-tab',
@@ -12,14 +16,15 @@ import { NutrientService } from 'src/app/services/nutrient.service';
   styleUrls: ['./meal-plan-tab.component.css'],
 })
 export class MealPlanTabComponent implements OnInit {
-  @Input() data!: MealPlanDto;
+  @Input() data!: MealPlan;
+  @Output() onDeleteMealPlanEvent: EventEmitter<MealPlan> = new EventEmitter();
 
-  selectedRow!: MealPlanNutrientDto;
 
-  nutrients!: NutrientDto[];
+  selectedRow!: MealPlanNutrient;
 
-  dataSource: MatTableDataSource<MealPlanNutrientDto> =
-    new MatTableDataSource();
+  nutrients!: Nutrient[];
+
+  dataSource: MatTableDataSource<MealPlanNutrient> = new MatTableDataSource();
 
   displayedColumns: string[] = [
     'amount',
@@ -42,44 +47,67 @@ export class MealPlanTabComponent implements OnInit {
 
   constructor(
     private nutrientService: NutrientService,
-    private formBuilder: FormBuilder
-  ) {}
+    private mealPlanService: MealPlanService,
+    private totalCalculatorService: TotalCalculatorService) {}
 
   ngOnInit(): void {
     this.nutrientService.fetchAll().subscribe((nutrientDtos: NutrientDto[]) => {
-      this.nutrients = nutrientDtos;
+      this.nutrients = nutrientDtos.map(
+        (dto: NutrientDto) => new Nutrient(dto)
+      );
     });
+
+    this.dataSource.data = this.data.getNutrients();
   }
 
-  updateAmount(
-    amount: number,
-    mealPlanNutrientDto: MealPlanNutrientDto
-  ): number {
-    return (
-      (amount / mealPlanNutrientDto.nutrient.amount) *
-      mealPlanNutrientDto.amount
-    );
+  updateAmount(amount: number, MealPlanNutrient: MealPlanNutrient): number {
+   const result: number = (amount / MealPlanNutrient.getNutrient().getAmount()) *
+      MealPlanNutrient.getAmount();
+
+    return Math.round((result + Number.EPSILON) * 100) / 100;
   }
 
-  onRowSelection(selectedRow: MealPlanNutrientDto) {
+  onRowSelection(selectedRow: MealPlanNutrient) {
     this.selectedRow = selectedRow;
   }
 
   onSubmit(): void {
-    const newElement: MealPlanNutrientDto = new MealPlanNutrientDto();
-    newElement.amount = 200;
-    newElement.nutrient = this.selected!;
-    this.data.nutrients.push(newElement);
-    this.dataSource.data = this.data.nutrients;
-    // Process checkout data here
-    console.warn('Your order has been submitted', this.selected);
+    const dto: MealPlanNutrientDto = new MealPlanNutrientDto();
+    dto.amount = 100;
+    dto.nutrient = this.selected!;
+
+    const newElement: MealPlanNutrient = new MealPlanNutrient(dto);
+
+    this.data.getNutrients().push(newElement);
+    this.dataSource.data = this.data.getNutrients();
   }
 
-  calculateTotal(amountSupplier: () => number): number {
-    return this.dataSource.data.map(() => amountSupplier()).reduce(this.add, 0);
+  onSave() {
+    this.mealPlanService.edit(this.data).subscribe();
   }
 
-  add(accumulator: number, a: number): number {
-    return accumulator + a;
+  onDelete() {
+    this.onDeleteMealPlanEvent.emit(this.data);
+    // this.mealPlanService.delete(this.data).subscribe();
+  }
+
+  onRemoveNutrient() {
+    this.nutrientService.removeMealPlanNutrient(this.selectedRow).subscribe(() => {
+      const data: MealPlanNutrient[] = this.dataSource.data;
+      const indexOfRemovable: number = data.indexOf(this.selectedRow);
+
+      data.splice(indexOfRemovable, 1);
+      this.dataSource.data = data;
+    })
+  }
+
+  calculateTotal(column: TotalColumn): number
+  {
+    return this.totalCalculatorService.calculateTotal(this.dataSource.data, column);
+  }
+
+  totalColumns(): typeof TotalColumn
+  {
+    return TotalColumn;
   }
 }

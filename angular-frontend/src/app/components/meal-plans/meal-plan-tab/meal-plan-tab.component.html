@@ -1,14 +1,20 @@
-<p>meal-plan-tab works!</p>
-
-<mat-form-field appearance="fill" *ngIf="nutrients">
-    <mat-label>Select</mat-label>
-    <mat-select [(value)]="selected">
-        <mat-option *ngFor="let nutrient of nutrients" [value]="nutrient">
-            {{ nutrient.name }}
-        </mat-option>
-    </mat-select>
-</mat-form-field>
-<button mat-button (click)="onSubmit()">Add new</button>
+<h3>
+    {{ data.getDescription() }}
+</h3>
+<div>
+    <mat-form-field appearance="fill" *ngIf="nutrients">
+        <mat-label>Select</mat-label>
+        <mat-select [(value)]="selected">
+            <mat-option *ngFor="let nutrient of nutrients" [value]="nutrient">
+                {{ nutrient.getName() }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <button mat-button (click)="onSubmit()">Add new</button>
+    <button mat-button color="primary" (click)="onSave()">Save Meal Plan</button>
+    <button mat-button color="accent" (click)="onDelete()">Delete Meal Plan</button>
+    <button mat-button color="accent" (click)="onRemoveNutrient()">Remove Nutrient</button>
+</div>
 
 <table
     mat-table
@@ -20,164 +26,136 @@
   The actual rendered columns are set as a property on the row definition" -->
     <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef>amount</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            <input type="text" [(ngModel)]="mealPlanNutrientDto.amount" />
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            <input type="number" [(ngModel)]="mealPlanNutrient.amount" />
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+           <strong>{{ calculateTotal(totalColumns().Amount) }}</strong> 
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef>id</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{ mealPlanNutrientDto.nutrient.id }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ mealPlanNutrient.getNutrient().getId() }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef>name</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{ mealPlanNutrientDto.nutrient.name }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ mealPlanNutrient.getNutrient().getName() }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="type">
         <th mat-header-cell *matHeaderCellDef>type</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{ mealPlanNutrientDto.nutrient.type }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ mealPlanNutrient.getNutrient().getType() }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef></td>
     </ng-container>
 
     <ng-container matColumnDef="kcal">
         <th mat-header-cell *matHeaderCellDef>kcal</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.kcal,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getKcal(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().Kcal) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="protein">
         <th mat-header-cell *matHeaderCellDef>protein</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.protein,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getProtein(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().Protein) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="carbohydrate">
         <th mat-header-cell *matHeaderCellDef>carbohydrate</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.carbohydrate,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getCarbohydrate(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().Carbohydrate) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="saturatedFat">
         <th mat-header-cell *matHeaderCellDef>saturatedFat</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.saturatedFat,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getSaturatedFat(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().SaturatedFat) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="unsaturatedFat">
         <th mat-header-cell *matHeaderCellDef>unsaturatedFat</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.unsaturatedFat,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getUnsaturatedFat(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().UnsaturatedFat) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="sugar">
         <th mat-header-cell *matHeaderCellDef>sugar</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.sugar,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getSugar(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().Sugar) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="salt">
         <th mat-header-cell *matHeaderCellDef>salt</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.salt,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getSalt(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().Salt) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="fiber">
         <th mat-header-cell *matHeaderCellDef>fiber</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.fiber,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{updateAmount(mealPlanNutrient.getNutrient().getFiber(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().Fiber) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="packageSize">
         <th mat-header-cell *matHeaderCellDef>packageSize</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.packageSize,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getPackageSize(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().PackageSize) }}</strong>
+        </td>
     </ng-container>
 
     <ng-container matColumnDef="packagePrice">
         <th mat-header-cell *matHeaderCellDef>packagePrice</th>
-        <td mat-cell *matCellDef="let mealPlanNutrientDto">
-            {{
-                updateAmount(
-                    mealPlanNutrientDto.nutrient.packagePrice,
-                    mealPlanNutrientDto
-                )
-            }}
+        <td mat-cell *matCellDef="let mealPlanNutrient">
+            {{ updateAmount(mealPlanNutrient.getNutrient().getPackagePrice(), mealPlanNutrient) }}
         </td>
-        <td mat-footer-cell *matFooterCellDef>{{ calculateTotal() }}</td>
+        <td mat-footer-cell *matFooterCellDef>
+            <strong>{{ calculateTotal(totalColumns().PackagePrice) }}</strong>
+        </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

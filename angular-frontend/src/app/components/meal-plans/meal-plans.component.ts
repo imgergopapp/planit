@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MealPlanDto } from 'src/app/models/dto/meal-plan-dto';
+import { MealPlan } from 'src/app/models/meal-plan';
 import { MealPlanService } from 'src/app/services/meal-plan.service';
 import { MealPlanEditorComponent } from './meal-plan-editor/meal-plan-editor.component';
 
@@ -10,7 +11,7 @@ import { MealPlanEditorComponent } from './meal-plan-editor/meal-plan-editor.com
   styleUrls: ['./meal-plans.component.css'],
 })
 export class MealPlansComponent implements OnInit {
-  mealPlans!: MealPlanDto[];
+  mealPlans!: MealPlan[];
 
   constructor(
     private mealPlanService: MealPlanService,
@@ -21,23 +22,34 @@ export class MealPlansComponent implements OnInit {
     this.mealPlanService
       .fetchAll()
       .subscribe((fetchedMealPlanDtos: MealPlanDto[]) => {
-        this.mealPlans = fetchedMealPlanDtos;
+        this.mealPlans = fetchedMealPlanDtos.map(
+          (mealPlanDto: MealPlanDto) => new MealPlan(mealPlanDto)
+        );
       });
   }
 
   onAddNew(): void {
     const dialogRef = this.dialog.open(MealPlanEditorComponent, {
-      data: new MealPlanDto(),
+      data: new MealPlan(new MealPlanDto()),
     });
 
     dialogRef.componentInstance.onSaveEvent.subscribe(
-      (newNutriendDto: MealPlanDto) => {
+      (newNutriendDto: MealPlan) => {
         this.mealPlanService
           .addNew(newNutriendDto)
           .subscribe((newPersistedNutrient: MealPlanDto) => {
-            this.mealPlans.push(newPersistedNutrient);
+            this.mealPlans.push(new MealPlan(newPersistedNutrient));
           });
       }
     );
+  }
+
+  onDeleteMealPlan(mealPlan: MealPlan): void
+  {
+    this.mealPlanService.delete(mealPlan).subscribe(() => {
+      const indexOfdeletable: number = this.mealPlans.indexOf(mealPlan);
+
+      this.mealPlans.splice(indexOfdeletable, 1);
+    });
   }
 }

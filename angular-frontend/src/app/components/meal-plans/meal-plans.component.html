@@ -1,6 +1,6 @@
 <button (click)="onAddNew()">Create New</button>
-<mat-tab-group>
-    <mat-tab *ngFor="let mealPlan of mealPlans" [label]="mealPlan.name">
-        <app-meal-plan-tab [data]="mealPlan"></app-meal-plan-tab>
+<mat-tab-group class="full-min-width">
+    <mat-tab *ngFor="let mealPlan of mealPlans" [label]="mealPlan.getName()">
+        <app-meal-plan-tab [data]="mealPlan" (onDeleteMealPlanEvent)="onDeleteMealPlan($event)"></app-meal-plan-tab>
     </mat-tab>
 </mat-tab-group>
